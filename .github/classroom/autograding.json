@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Check script output",
+      "setup": "",
+      "run": "python hello.py > output.txt && grep -Fx 'Hello, Python World!' output.txt",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Check comment format",
+      "setup": "",
+      "run": "head -n 1 hello.py | grep -E '^#[[:space:]]*[A-Za-z]+.*[0-9]{4}$'",
+      "input": "",
+      "output": "",
+      "comparison": "exact",
+      "timeout": 10,
+      "points": 5
+    }
+  ]
+}
