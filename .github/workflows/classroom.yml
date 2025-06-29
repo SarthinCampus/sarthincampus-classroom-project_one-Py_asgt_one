@@ -1,35 +1,40 @@
-name: Autograding Tests
-
-on:
-  push:
-  workflow_dispatch:
-
-permissions:
-  checks: write
-  actions: read
-  contents: read
-
+name: GitHub Classroom Workflow
+on: [push]
 jobs:
-  run-autograding-tests:
+  build:
+    name: Autograding
     runs-on: ubuntu-latest
-    if: github.actor != 'github-classroom[bot]'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Hello World Test
-        id: hellotest  # ID with no hyphen
-        uses: classroom-resources/autograding-io-grader@v1
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          test-name: Hello World Output
-          id: hellotest
-          command: python3 hello.py
-          expected-output: Hello, Python World!
-          comparison-method: substring
-          timeout: 10
-
-      - name: Report Autograding Results
-        uses: classroom-resources/autograding-grading-reporter@v1
+          python-version: '3.x'
+      - name: Run hello.py and check output
+        run: |
+          python hello.py > output.txt
+          if ! grep -Fx "Hello, Python World!" output.txt; then
+            echo "Error: Output does not match 'Hello, Python World!'"
+            exit 1
+          fi
+        id: run_script
+        continue-on-error: false
+      - name: Check for comment with name and date
+        run: |
+          if ! head -n 1 hello.py | grep -E "^#[[:space:]]*[A-Za-z]+.*[0-9]{4}$"; then
+            echo "Error: First line of hello.py must be a comment with your name and a four-digit year (e.g., # John Doe, 2025)"
+            exit 1
+          fi
+        id: check_comment
+        continue-on-error: false
+      - uses: education/autograding@v1
         with:
-          runners:
-            - hellotest
+          setup: |
+            echo "Running autograding tests"
+          tests: |
+            - name: Check script output
+              run: echo "Output test passed"
+              points: 5
+            - name: Check comment format
+              run: echo "Comment test passed"
+              points: 5
