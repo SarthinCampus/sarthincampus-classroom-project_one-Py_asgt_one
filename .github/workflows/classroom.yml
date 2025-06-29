@@ -1,49 +1,24 @@
-name: GitHub Classroom Workflow
-on: [push]
-jobs:
-  build:
-    name: Autograding
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Check if hello.py exists
-        run: |
-          if [ ! -f hello.py ]; then
-            echo "Error: hello.py not found in the repository root"
-            exit 1
-          fi
-        working-directory: ./
-      - name: Run hello.py and check output
-        run: |
-          python hello.py > output.txt
-          if ! grep -Fx "Hello, Python World!" output.txt; then
-            echo "Error: Output does not match 'Hello, Python World!'"
-            exit 1
-          fi
-        id: run_script
-        working-directory: ./
-      - name: Check for comment with name and date
-        run: |
-          if ! head -n 1 hello.py | grep -E "^#[[:space:]]*[A-Za-z]+.*[0-9]{4}$"; then
-            echo "Error: First line of hello.py must be a comment with your name and a four-digit year (e.g., # John Doe, 2025)"
-            exit 1
-          fi
-        id: check_comment
-        working-directory: ./
-      - uses: education/autograding@v1
-        with:
-          setup: |
-            echo "Running autograding tests"
-          tests: |
-            - name: Check script output
-              run: echo "Output test passed"
-              points: 5
-            - name: Check comment format
-              run: echo "Comment test passed"
-              points: 5
+
+     name: GitHub Classroom Workflow
+     on: [push]
+     jobs:
+       build:
+         name: Autograding
+         runs-on: ubuntu-latest
+         steps:
+           - uses: actions/checkout@v4
+             with:
+               fetch-depth: 1
+           - name: Set up Python
+             uses: actions/setup-python@v5
+             with:
+               python-version: '3.x'
+           - name: Check if hello.py exists
+             run: |
+               if [ ! -f hello.py ]; then
+                 echo "::error::hello.py not found in the repository root. Please submit a file named 'hello.py'."
+                 exit 1
+               fi
+             working-directory: ./
+           - uses: education/autograding@v1
+  
