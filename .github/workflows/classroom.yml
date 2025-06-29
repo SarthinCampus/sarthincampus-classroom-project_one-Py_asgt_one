@@ -6,10 +6,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Check if hello.py exists
+        run: |
+          if [ ! -f hello.py ]; then
+            echo "Error: hello.py not found in the repository root"
+            exit 1
+          fi
+        working-directory: ./
       - name: Run hello.py and check output
         run: |
           python hello.py > output.txt
@@ -18,7 +27,7 @@ jobs:
             exit 1
           fi
         id: run_script
-        continue-on-error: false
+        working-directory: ./
       - name: Check for comment with name and date
         run: |
           if ! head -n 1 hello.py | grep -E "^#[[:space:]]*[A-Za-z]+.*[0-9]{4}$"; then
@@ -26,7 +35,7 @@ jobs:
             exit 1
           fi
         id: check_comment
-        continue-on-error: false
+        working-directory: ./
       - uses: education/autograding@v1
         with:
           setup: |
