@@ -31,5 +31,5 @@ jobs:
       - name: Report Autograding Results
         uses: classroom-resources/autograding-grading-reporter@v1
         with:
-          runners: # <--- Changed this line
-            - hellotest # <--- And this line
+          runners:
+            - hellotest
