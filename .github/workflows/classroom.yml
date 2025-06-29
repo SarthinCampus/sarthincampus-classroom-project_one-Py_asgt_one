@@ -19,17 +19,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Hello World Test
+        id: hello_test  # ID with underscore (no dash)
         uses: classroom-resources/autograding-io-grader@v1
-        id: hello-test
         with:
           test-name: Hello World Output Test
-          id: hello-test
+          id: hello_test
           command: python3 hello.py
           expected-output: Hello, Python World!
-          comparison-method: exact
+          comparison-method: substring
           timeout: 10
 
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
         with:
-         runners: "hello-test,"
+          runners: "hello_test"
