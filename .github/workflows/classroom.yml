@@ -3,7 +3,6 @@ name: Autograding Tests
 on:
   push:
   workflow_dispatch:
-  repository_dispatch:
 
 permissions:
   checks: write
@@ -19,17 +18,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Hello World Test
-        id: hello_test  # ID with underscore (no dash)
+        id: hello_test  # ID with no hyphen
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Hello World Output Test
+          test-name: Hello World Output
           id: hello_test
           command: python3 hello.py
           expected-output: Hello, Python World!
           comparison-method: substring
           timeout: 10
 
-      - name: Autograding Reporter
+      - name: Report Autograding Results
         uses: classroom-resources/autograding-grading-reporter@v1
         with:
-          runners: "hello_test"
+          runners: |
+            hello_test
